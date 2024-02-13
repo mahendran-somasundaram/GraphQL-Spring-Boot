@@ -9,8 +9,6 @@ Installation
 To run this application locally, follow these steps:
 Clone the repository:
 git clone https://github.com/mahendran-somasundaram/your-repository.git
-Navigate to the project directory:
-cd your-repository
 Build the project using Maven:
 mvn clean install
 Run the application:
