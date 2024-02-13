@@ -49,6 +49,7 @@ type Mutation{
     update(id:ID,name:String,team:String):Player
     delete(id:ID):Player
 }
+
 Feel free to explore and interact with the GraphQL API using these queries and mutations.
 Development
 
