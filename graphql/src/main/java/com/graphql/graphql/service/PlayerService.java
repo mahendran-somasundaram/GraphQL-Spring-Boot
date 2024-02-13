@@ -1,57 +1,71 @@
 package com.graphql.graphql.service;
 
 import com.graphql.graphql.model.Player;
-import com.graphql.graphql.model.Team;
-import jakarta.annotation.PostConstruct;
+import com.graphql.graphql.repository.Graphqlrepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class PlayerService {
-    private List<Player> players = new ArrayList<>();
+    @Autowired
+    private Graphqlrepository graphqlrepository;
+//    AtomicInteger id = new AtomicInteger(0);
 
-    AtomicInteger id = new AtomicInteger(0);
 
     public List<Player> findAll() {
-        return players;
+        return graphqlrepository.findAll();
     }
-    public Optional<Player> findOne(Integer id){
-        return players.stream().filter(player -> player.getId()==id).findFirst();
+    public Optional<Player> findOne(Long id){
+        Optional<Player> optionalPlayer = graphqlrepository.findById(id);
+        if(optionalPlayer.isPresent()){
+            return optionalPlayer;
+        }
+        else {
+            throw new IllegalArgumentException("Player with ID \" + id + \" not found.");
+        }
+//        return players.stream().filter(player -> player.getId()==id).findFirst();
     }
-    public  Player create(String name, Team team){
-        Player player = new Player(id.incrementAndGet(),name,team);
-        players.add(player);
-        return player;
+    public  Player create(String name, String team){
+       Player player = new Player();
+        player.setName(name);
+        player.setTeam(team);
+        return graphqlrepository.save(player);
     }
-    public Player delete(Integer id){
-        Player player = players.stream().filter(c-> c.getId()==id)
-                .findFirst().orElseThrow(()-> new IllegalArgumentException());
-        players.remove(player);
-        return player;
-    }
-
-    public Player update(int id, String name, Team team){
-        Player updatedplayer = new Player(id,name,team);
-        Optional<Player> optionalPlayer= players.stream().filter(c-> c.getId()==id).findFirst();
+    public Player delete(Long id){
+        Optional<Player> optionalPlayer = graphqlrepository.findById(id);
         if (optionalPlayer.isPresent()){
             Player player = optionalPlayer.get();
-            int index = players.indexOf(player);
-            players.set(index,updatedplayer);
+            graphqlrepository.delete(player);
+            return player;
         }else {
+            throw new IllegalArgumentException("Player with ID \" + id + \" not found.");
+        }
+
+    }
+
+    public Player update(Long id, String name, String team){
+
+        Optional<Player> optionalPlayer= graphqlrepository.findById(id);
+        if (optionalPlayer.isPresent()){
+            Player player = optionalPlayer.get();
+            player.setName(name);
+            player.setTeam(team);
+            return graphqlrepository.save(player);
+        }
+        else {
             throw new IllegalArgumentException();
         }
-        return updatedplayer;
+
     }
-    @PostConstruct
+/*    @PostConstruct
     public void init(){
         players.add(new Player(id.incrementAndGet(),"Mahendran",Team.CSk));
         players.add(new Player(id.incrementAndGet(),"Vishwajith",Team.MI));
         players.add(new Player(id.incrementAndGet(),"Timmy",Team.DC));
-        players.add((new Player(id.incrementAndGet(),"Pranesh",Team.GT)));
-    }
+        players.add((new Player(id.incrementAndGet(),"Pranesh", Team.GT)));
+    }*/
 
 }
