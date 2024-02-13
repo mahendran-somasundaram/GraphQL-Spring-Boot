@@ -1,4 +1,4 @@
-GraphQL Spring Boot CRUD Application
+**GraphQL Spring Boot CRUD Application**
 
 This is a simple CRUD (Create, Read, Update, Delete) application built with Spring Boot and GraphQL. GraphQL is a query language for APIs that provides a more efficient, powerful, and flexible alternative to REST. In GraphQL, clients can specify exactly what data they need, which reduces over-fetching and under-fetching of data.
 Introduction
